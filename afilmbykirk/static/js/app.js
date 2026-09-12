@@ -125,6 +125,8 @@
   if (document.body.dataset.localControls === 'true') {
     let previousPointer;
     let lastPointerNavigation = 0;
+    let accumulatedX = 0;
+    let accumulatedY = 0;
     document.addEventListener('mousemove', (event) => {
       const current = { x: event.clientX, y: event.clientY };
       if (!previousPointer) {
@@ -134,12 +136,16 @@
       const dx = current.x - previousPointer.x;
       const dy = current.y - previousPointer.y;
       previousPointer = current;
-      if (Date.now() - lastPointerNavigation < 220) return;
-      if (Math.max(Math.abs(dx), Math.abs(dy)) < 12) return;
-      const key = Math.abs(dx) > Math.abs(dy)
-        ? (dx > 0 ? 'ArrowRight' : 'ArrowLeft')
-        : (dy > 0 ? 'ArrowDown' : 'ArrowUp');
+      accumulatedX += dx;
+      accumulatedY += dy;
+      if (Date.now() - lastPointerNavigation < 140) return;
+      if (Math.max(Math.abs(accumulatedX), Math.abs(accumulatedY)) < 4) return;
+      const key = Math.abs(accumulatedX) > Math.abs(accumulatedY)
+        ? (accumulatedX > 0 ? 'ArrowRight' : 'ArrowLeft')
+        : (accumulatedY > 0 ? 'ArrowDown' : 'ArrowUp');
       lastPointerNavigation = Date.now();
+      accumulatedX = 0;
+      accumulatedY = 0;
       document.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
     }, { passive: true });
   }
