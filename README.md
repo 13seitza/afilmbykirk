@@ -117,6 +117,14 @@ sudo systemctl restart afilmbykirk
 
 Watch history is stored in `instance/afilmbykirk.sqlite3`. Back up that file to preserve progress.
 
+Convert an incompatible library to browser-safe MP4 with:
+
+```bash
+.venv/bin/python scripts/convert_media.py media --delete-originals
+```
+
+Each MP4 is written temporarily and codec-validated before its source MKV is removed. The command is restart-safe.
+
 The interface sleeps after 10 inactive minutes on menus or while playback is paused. Active video prevents sleep. Change the timeout in `/etc/afilmbykirk.env`:
 
 ```text
