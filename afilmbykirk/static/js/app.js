@@ -5,6 +5,17 @@
   let idleTimer;
   let sleeping = false;
 
+  const ensurePointerLock = () => {
+    if (
+      document.body.dataset.localControls === 'true'
+      && document.pointerLockElement !== document.documentElement
+      && document.documentElement.requestPointerLock
+    ) {
+      const request = document.documentElement.requestPointerLock();
+      request?.catch?.(() => {});
+    }
+  };
+
   const videoIsPlaying = () => {
     const player = document.querySelector('video:not(.ambient-video)');
     return player && !player.paused && !player.ended;
@@ -38,6 +49,7 @@
   };
 
   document.addEventListener('keydown', (event) => {
+    ensurePointerLock();
     const volumeActions = {
       AudioVolumeUp: 'up',
       AudioVolumeDown: 'down',
@@ -73,6 +85,7 @@
     wake(event);
   }, true);
   document.addEventListener('pointerdown', wake, true);
+  document.addEventListener('pointerdown', ensurePointerLock, true);
   document.addEventListener('touchstart', wake, { capture: true, passive: false });
   document.addEventListener('mousemove', wake, { passive: true });
 
@@ -133,8 +146,8 @@
         previousPointer = current;
         return;
       }
-      const dx = current.x - previousPointer.x;
-      const dy = current.y - previousPointer.y;
+      const dx = event.movementX || current.x - previousPointer.x;
+      const dy = event.movementY || current.y - previousPointer.y;
       previousPointer = current;
       accumulatedX += dx;
       accumulatedY += dy;

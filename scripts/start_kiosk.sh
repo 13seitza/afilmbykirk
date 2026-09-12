@@ -16,5 +16,6 @@ exec chromium "${URL}" \
   --disable-infobars \
   --no-first-run \
   --disable-session-crashed-bubble \
+  --hide-scrollbars \
   --autoplay-policy=no-user-gesture-required \
   --start-maximized
