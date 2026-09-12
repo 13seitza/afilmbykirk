@@ -205,3 +205,13 @@ def connect_bluetooth(address):
     _run(["bluetoothctl", "trust", address])
     _run(["bluetoothctl", "connect", address], timeout=30)
     return {"connected": True, "address": address}
+
+
+def power_action(action):
+    commands = {
+        "restart": ["sudo", "-n", "/usr/bin/systemctl", "reboot"],
+        "shutdown": ["sudo", "-n", "/usr/bin/systemctl", "poweroff"],
+    }
+    if action not in commands:
+        raise ControlError("Unknown power action")
+    _run(commands[action], timeout=10)

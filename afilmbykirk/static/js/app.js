@@ -38,6 +38,17 @@
   };
 
   document.addEventListener('keydown', (event) => {
+    const selectKeys = [
+      'BrowserHome', 'BrowserSearch', 'Search', 'Accept', 'Select', 'Execute',
+      'LaunchApplication1', 'LaunchApplication2'
+    ];
+    if (selectKeys.includes(event.key) && document.body.dataset.localControls === 'true') {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      document.activeElement?.click();
+      scheduleSleep();
+      return;
+    }
     const volumeActions = {
       AudioVolumeUp: 'up',
       AudioVolumeDown: 'down',

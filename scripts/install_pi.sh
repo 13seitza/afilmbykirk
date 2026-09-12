@@ -40,6 +40,12 @@ AFBK_SECRET_KEY="$SECRET_KEY"
 AFBK_IDLE_TIMEOUT_SECONDS=600
 EOF
 
+sudo tee /etc/sudoers.d/afilmbykirk-power >/dev/null <<EOF
+$APP_USER ALL=(root) NOPASSWD: /usr/bin/systemctl reboot, /usr/bin/systemctl poweroff
+EOF
+sudo chmod 440 /etc/sudoers.d/afilmbykirk-power
+sudo visudo -cf /etc/sudoers.d/afilmbykirk-power >/dev/null
+
 sed \
   -e "s|__USER__|$APP_USER|g" \
   -e "s|__GROUP__|$APP_GROUP|g" \

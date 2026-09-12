@@ -30,6 +30,31 @@
     } catch (error) { notify(error.message); }
   });
 
+  document.querySelectorAll('[data-power]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const action = button.dataset.power;
+      const message = action === 'shutdown'
+        ? 'Shut down the Raspberry Pi? Wait for the activity light to stop before unplugging it.'
+        : 'Restart A Film by Kirk?';
+      if (!window.confirm(message)) return;
+      button.disabled = true;
+      button.textContent = action === 'shutdown' ? 'Shutting down…' : 'Restarting…';
+      try {
+        const response = await fetch('/api/system/power', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
+        });
+        if (!response.ok) {
+          const result = await response.json();
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        button.disabled = false;
+        notify(error.message);
+      }
+    });
+  });
+
   const postVolume = async (action) => {
     const response = await fetch('/api/volume', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
