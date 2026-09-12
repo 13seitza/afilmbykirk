@@ -16,7 +16,7 @@ PUBLIC_URL="${AFBK_PUBLIC_URL:-http://afilmbykirk.local:5000/}"
 
 echo "Installing A Film by Kirk from $APP_DIR"
 sudo apt-get update
-sudo apt-get install -y python3-venv python3-pip chromium curl avahi-daemon ffmpeg bluez pulseaudio-utils
+sudo apt-get install -y python3-venv python3-pip python3-evdev chromium curl avahi-daemon ffmpeg bluez pulseaudio-utils
 sudo raspi-config nonint do_boot_behaviour B4
 sudo raspi-config nonint do_blanking 1
 
@@ -47,6 +47,12 @@ sed \
   -e "s|__APP_DIR__|$APP_DIR|g" \
   "$APP_DIR/systemd/afilmbykirk.service.in" | sudo tee /etc/systemd/system/afilmbykirk.service >/dev/null
 
+sed \
+  -e "s|__USER__|$APP_USER|g" \
+  -e "s|__GROUP__|$APP_GROUP|g" \
+  -e "s|__APP_DIR__|$APP_DIR|g" \
+  "$APP_DIR/systemd/afilmbykirk-remote.service.in" | sudo tee /etc/systemd/system/afilmbykirk-remote.service >/dev/null
+
 AUTOSTART_DIR="$USER_HOME/.config/labwc"
 AUTOSTART_FILE="$AUTOSTART_DIR/autostart"
 mkdir -p "$AUTOSTART_DIR"
@@ -58,7 +64,7 @@ fi
 sudo chown -R "$APP_USER:$APP_GROUP" "$AUTOSTART_DIR" "$MEDIA_DIR" "$APP_DIR/instance"
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now afilmbykirk.service avahi-daemon bluetooth
+sudo systemctl enable --now afilmbykirk.service afilmbykirk-remote.service avahi-daemon bluetooth
 
 echo
 echo "Installation complete."

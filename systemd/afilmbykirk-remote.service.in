@@ -1,0 +1,16 @@
+[Unit]
+Description=A Film by Kirk USB remote mapper
+After=systemd-udev-settle.service
+
+[Service]
+Type=simple
+User=__USER__
+Group=__GROUP__
+ExecStart=/usr/bin/python3 __APP_DIR__/scripts/remote_mapper.py
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -17,7 +17,7 @@ It works without an internet connection after setup. No episodes, artwork, or ot
 - LAN streaming with byte-range support for seeking
 - QR code for opening the interface on another device
 - Keyboard and remote-friendly focus navigation
-- Hidden kiosk cursor and mouse-style remote direction-pad translation
+- Hardware-level mapping for the included XING WEI USB remote's arrows and OK button
 - Automatic startup on Raspberry Pi OS
 - Black-screen idle mode that wakes on the first remote button
 - TV-local Wi-Fi setup, HDMI/Bluetooth audio selection, volume controls, and USB remote diagnostics
