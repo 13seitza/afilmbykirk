@@ -16,7 +16,7 @@ PUBLIC_URL="${AFBK_PUBLIC_URL:-http://afilmbykirk.local:5000/}"
 
 echo "Installing A Film by Kirk from $APP_DIR"
 sudo apt-get update
-sudo apt-get install -y python3-venv python3-pip python3-evdev chromium curl avahi-daemon ffmpeg bluez pulseaudio-utils
+sudo apt-get install -y python3-venv python3-pip python3-evdev chromium curl avahi-daemon ffmpeg bluez pulseaudio-utils wtype
 sudo raspi-config nonint do_boot_behaviour B4
 sudo raspi-config nonint do_blanking 1
 
@@ -55,11 +55,17 @@ sed \
 
 AUTOSTART_DIR="$USER_HOME/.config/labwc"
 AUTOSTART_FILE="$AUTOSTART_DIR/autostart"
+LABWC_CONFIG="$AUTOSTART_DIR/rc.xml"
 mkdir -p "$AUTOSTART_DIR"
 touch "$AUTOSTART_FILE"
+python3 "$APP_DIR/scripts/configure_labwc.py" "$LABWC_CONFIG"
 KIOSK_COMMAND="$APP_DIR/scripts/start_kiosk.sh &"
 if ! grep -Fq "$APP_DIR/scripts/start_kiosk.sh" "$AUTOSTART_FILE"; then
   printf '\n%s\n' "$KIOSK_COMMAND" >> "$AUTOSTART_FILE"
+fi
+HIDE_CURSOR_COMMAND="wtype -M alt -M logo -P h -p h -m logo -m alt &"
+if ! grep -Fq "wtype -M alt -M logo -P h" "$AUTOSTART_FILE"; then
+  printf '%s\n' "$HIDE_CURSOR_COMMAND" >> "$AUTOSTART_FILE"
 fi
 sudo chown -R "$APP_USER:$APP_GROUP" "$AUTOSTART_DIR" "$MEDIA_DIR" "$APP_DIR/instance"
 

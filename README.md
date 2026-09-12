@@ -18,6 +18,7 @@ It works without an internet connection after setup. No episodes, artwork, or ot
 - QR code for opening the interface on another device
 - Keyboard and remote-friendly focus navigation
 - Hardware-level mapping for the included XING WEI USB remote's arrows and OK button
+- Native labwc compositor cursor hiding in kiosk mode
 - Automatic startup on Raspberry Pi OS
 - Black-screen idle mode that wakes on the first remote button
 - TV-local Wi-Fi setup, HDMI/Bluetooth audio selection, volume controls, and USB remote diagnostics
