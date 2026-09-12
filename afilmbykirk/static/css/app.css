@@ -377,6 +377,24 @@ footer {
 .settings-card { padding: 25px; border: 1px solid var(--line); background: rgba(16,16,16,.88); }
 .settings-link { display: block; color: inherit; }
 .settings-link:hover,.settings-link:focus { border-color: #fff; outline: none; }
+.settings-page .minimal-button,
+.settings-page .wifi-network,
+.settings-page .settings-link {
+  transition: border-color .14s, box-shadow .14s, background .14s;
+}
+.settings-page .minimal-button {
+  color: #fff;
+  border-color: #666;
+  background: transparent;
+}
+.settings-page .minimal-button:focus,
+.settings-page .wifi-network:focus,
+.settings-page .settings-link:focus {
+  border-color: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px #fff;
+  background-color: #1b1b1b;
+}
 .settings-card h2 { margin: 7px 0 9px; font-size: 25px; }
 .settings-card p { color: #aaa; }
 .settings-card .control-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }

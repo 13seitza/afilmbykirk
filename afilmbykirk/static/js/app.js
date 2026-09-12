@@ -220,6 +220,8 @@
       document.querySelector('.continue-card')?.focus();
     } else if (document.body.classList.contains('season-page')) {
       document.querySelector('.play-season-button')?.focus();
+    } else if (document.body.classList.contains('settings-page')) {
+      document.querySelector('.back-button')?.focus();
     }
     scheduleSleep();
   });
