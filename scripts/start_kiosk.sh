@@ -11,6 +11,7 @@ done
 
 exec chromium "${URL}" \
   --kiosk \
+  --password-store=basic \
   --noerrdialogs \
   --disable-infobars \
   --no-first-run \
