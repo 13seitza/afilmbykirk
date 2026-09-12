@@ -119,6 +119,31 @@
     }
   };
 
+  // Some USB media remotes expose their direction pad as a tiny mouse rather
+  // than keyboard arrows. Convert deliberate pointer travel into the same key
+  // events used by the rest of the remote navigation system.
+  if (document.body.dataset.localControls === 'true') {
+    let previousPointer;
+    let lastPointerNavigation = 0;
+    document.addEventListener('mousemove', (event) => {
+      const current = { x: event.clientX, y: event.clientY };
+      if (!previousPointer) {
+        previousPointer = current;
+        return;
+      }
+      const dx = current.x - previousPointer.x;
+      const dy = current.y - previousPointer.y;
+      previousPointer = current;
+      if (Date.now() - lastPointerNavigation < 220) return;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 12) return;
+      const key = Math.abs(dx) > Math.abs(dy)
+        ? (dx > 0 ? 'ArrowRight' : 'ArrowLeft')
+        : (dy > 0 ? 'ArrowDown' : 'ArrowUp');
+      lastPointerNavigation = Date.now();
+      document.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
+    }, { passive: true });
+  }
+
   document.addEventListener('keydown', (event) => {
     if (document.body.classList.contains('watch-page')) return;
     if (
