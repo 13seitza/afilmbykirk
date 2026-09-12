@@ -266,7 +266,6 @@ footer {
 }
 .button-icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .minimal-button.primary { color: #000; background: #fff; border-color: #fff; }
-.danger-button { color: #ffb8b8; border-color: #6a2929; }
 .minimal-button:hover,
 .minimal-button:focus { border-color: #fff; }
 .minimal-button.disabled { color: #555; border-color: #292929; }

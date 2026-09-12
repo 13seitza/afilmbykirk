@@ -179,20 +179,6 @@ def test_volume_action_uses_system_control(client):
     change.assert_called_once_with("up")
 
 
-def test_power_action_requires_local_tv_and_calls_control(client):
-    with patch("afilmbykirk.routes.power_action") as power:
-        response = client.post("/api/system/power", json={"action": "restart"})
-    assert response.get_json() == {"ok": True}
-    power.assert_called_once_with("restart")
-
-    remote = client.post(
-        "/api/system/power",
-        json={"action": "shutdown"},
-        environ_base={"REMOTE_ADDR": "192.168.1.20"},
-    )
-    assert remote.status_code == 403
-
-
 def test_catalog_episodes_display_without_media(tmp_path):
     media = tmp_path / "media"
     media.mkdir()

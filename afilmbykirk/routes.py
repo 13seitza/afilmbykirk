@@ -25,7 +25,6 @@ from .system_controls import (
     change_volume,
     connect_bluetooth,
     connect_wifi,
-    power_action,
     scan_wifi,
     scan_bluetooth,
     select_audio_output,
@@ -290,17 +289,6 @@ def set_background_video():
         return jsonify(error="enabled must be true or false"), 400
     set_boolean("background_video_enabled", payload["enabled"])
     return jsonify(ok=True, enabled=payload["enabled"])
-
-
-@bp.post("/api/system/power")
-def system_power():
-    local_request_only()
-    payload = request.get_json(silent=True) or {}
-    try:
-        power_action(payload.get("action"))
-        return jsonify(ok=True)
-    except ControlError as error:
-        return jsonify(ok=False, error=str(error)), 400
 
 
 @bp.get("/api/audio/outputs")
