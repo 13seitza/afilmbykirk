@@ -69,7 +69,8 @@ def main():
     parser.add_argument("root", type=Path)
     parser.add_argument("--delete-originals", action="store_true")
     args = parser.parse_args()
-    sources = sorted(args.root.expanduser().resolve().rglob("*.mkv"))
+    root = args.root.expanduser().resolve()
+    sources = [root] if root.is_file() and root.suffix.lower() == ".mkv" else sorted(root.rglob("*.mkv"))
     if not sources:
         raise SystemExit("No MKV files found")
     print(f"Queued {len(sources)} file(s)", flush=True)
