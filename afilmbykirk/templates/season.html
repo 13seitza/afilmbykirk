@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Season {{ season_number }} · A Film by Kirk{% endblock %}
+{% block body_class %}season-page{% endblock %}
+{% block content %}
+<section class="season-screen">
+  <div class="season-title">
+    <div>
+      <p class="label">Gilmore Girls</p>
+      <h1>Season {{ season_number }}</h1>
+      <span>{{ episodes|length }} episodes · {{ available_episodes|length }} loaded</span>
+    </div>
+    <div class="season-actions">
+      {% if available_episodes %}
+      <a class="minimal-button play-season-button remote-focus" href="{{ url_for('main.watch', episode_id=available_episodes[0].id) }}">▶ Play season</a>
+      <a class="minimal-button remote-focus" href="{{ url_for('main.random_season_episode', season_number=season_number) }}">
+        <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3c5 0 5 10 10 10h3M17 14l3 3-3 3M4 17h3c5 0 5-10 10-10h3M17 4l3 3-3 3"/></svg>
+        Play random
+      </a>
+      {% else %}
+      <a class="minimal-button play-season-button remote-focus" href="{{ url_for('main.watch', episode_id=episodes[0].id) }}">▶ Play season</a>
+      <a class="minimal-button remote-focus" href="{{ url_for('main.random_season_episode', season_number=season_number) }}">
+        <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3c5 0 5 10 10 10h3M17 14l3 3-3 3M4 17h3c5 0 5-10 10-10h3M17 4l3 3-3 3"/></svg>
+        Play random
+      </a>
+      {% endif %}
+      <a class="minimal-button back-button remote-focus" href="{{ url_for('main.home') }}">← Go back</a>
+    </div>
+  </div>
+
+  <div class="episode-list">
+    {% for episode in episodes %}
+    {% set state = progress.get(episode.id, {}) %}
+    <a class="episode-row remote-focus{% if not episode.available %} unavailable{% endif %}" href="{{ url_for('main.watch', episode_id=episode.id) }}">
+      <span class="episode-number">{{ "%02d"|format(episode.number) }}</span>
+      {% if episode.available or episode.artwork %}
+      <span class="episode-thumb" style="--artwork:url('{{ url_for('main.artwork', episode_id=episode.id) }}')"></span>
+      {% else %}
+      <span class="episode-thumb placeholder">K</span>
+      {% endif %}
+      <span class="episode-copy">
+        <strong>{{ episode.title }}</strong>
+        {% if episode.description %}<small>{{ episode.description }}</small>{% endif %}
+        {% if state.get('position_seconds', 0) > 10 and not state.get('completed') %}
+        <i>Resume at {{ (state.position_seconds / 60)|int }} min</i>
+        {% elif state.get('completed') %}<i>Watched</i>
+        {% elif not episode.available %}<i>Media not loaded</i>{% endif %}
+      </span>
+      <b class="row-play">▶</b>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

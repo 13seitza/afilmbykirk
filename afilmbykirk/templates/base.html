@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#173d37">
+  <title>{% block title %}A Film by Kirk{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}" data-idle-timeout="{{ config.IDLE_TIMEOUT_SECONDS }}" data-local-controls="{{ 'true' if request.remote_addr in ['127.0.0.1', '::1'] else 'false' }}">
+  <header class="site-header">
+    <a class="brand remote-focus" href="{{ url_for('main.home') }}" aria-label="A Film by Kirk home">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="A Film by Kirk">
+    </a>
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+  <div class="sleep-screen" id="sleep-screen" aria-hidden="true">
+    <span>A Film by Kirk</span>
+  </div>
+  <div class="toast" id="kirk-toast" role="status">Kirk mode activated. Naturally.</div>
+  <div class="toast volume-toast" id="volume-toast" role="status"></div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Settings · A Film by Kirk{% endblock %}
+{% block body_class %}settings-page{% endblock %}
+{% block content %}
+<section class="settings-screen">
+  <div class="settings-heading">
+    <div><p class="label">The control room</p><h1>Settings</h1></div>
+    <a class="minimal-button back-button remote-focus" href="{{ url_for('main.home') }}">← Go back</a>
+  </div>
+
+  <div class="settings-grid">
+    <section class="settings-card">
+      <p class="label">Appearance</p>
+      <h2>Background video</h2>
+      <p id="background-video-status">Currently {{ 'on' if background_video_enabled else 'off' }}. When off, the home screen uses the black gradient.</p>
+      <button class="minimal-button remote-focus" id="toggle-background-video" type="button" data-enabled="{{ 'true' if background_video_enabled else 'false' }}">
+        Turn {{ 'off' if background_video_enabled else 'on' }}
+      </button>
+    </section>
+
+    <a class="settings-card settings-link remote-focus" href="{{ url_for('main.audio_settings') }}">
+      <p class="label">Sound</p>
+      <h2>Audio settings →</h2>
+      <p>Choose speakers, pair Bluetooth, and adjust volume.</p>
+    </a>
+
+    <section class="settings-card wifi-card">
+      <p class="label">Network</p>
+      <h2>Wi-Fi</h2>
+      <p id="wifi-status">{% if wifi.connected %}Connected to {{ wifi.connected }}{% elif wifi.available %}Not connected{% else %}Available on the Raspberry Pi{% endif %}</p>
+      <button class="minimal-button primary remote-focus" id="scan-wifi" type="button">Scan for networks</button>
+      <div class="wifi-list" id="wifi-list"></div>
+    </section>
+
+    <section class="settings-card remote-card">
+      <p class="label">USB media remote</p>
+      <h2>Button tester</h2>
+      <p>Press a button to see what the remote sends.</p>
+      <output class="remote-readout" id="remote-readout">Waiting for a button…</output>
+    </section>
+  </div>
+  <div class="toast" id="settings-toast" role="status"></div>
+</section>
+{% endblock %}
+{% block scripts %}<script defer src="{{ url_for('static', filename='js/settings.js') }}"></script>{% endblock %}

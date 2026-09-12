@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Audio Settings · A Film by Kirk{% endblock %}
+{% block body_class %}settings-page{% endblock %}
+{% block content %}
+<section class="settings-screen">
+  <div class="settings-heading">
+    <div><p class="label">Settings</p><h1>Audio</h1></div>
+    <a class="minimal-button back-button remote-focus" href="{{ url_for('main.settings') }}">← Go back</a>
+  </div>
+  <div class="settings-grid audio-settings-grid">
+    <section class="settings-card">
+      <p class="label">Sound level</p><h2>Volume</h2>
+      <p id="volume-status">{% if volume.available %}{{ volume.percent }}%{% if volume.muted %} · Muted{% endif %}{% else %}Available on the Raspberry Pi{% endif %}</p>
+      <div class="control-row">
+        <button class="minimal-button remote-focus" data-volume="down" type="button">− Lower</button>
+        <button class="minimal-button remote-focus" data-volume="mute" type="button">Mute</button>
+        <button class="minimal-button remote-focus" data-volume="up" type="button">+ Raise</button>
+      </div>
+    </section>
+    <section class="settings-card">
+      <p class="label">Playback device</p><h2>Audio output</h2>
+      <div class="audio-output-list" id="audio-output-list">
+        {% for output in audio_outputs %}
+        <button class="wifi-network remote-focus" data-audio-output="{{ output.id }}" type="button">
+          <strong>{% if output.selected %}✓ {% endif %}{{ output.name }}</strong>
+          <span>{{ 'Bluetooth' if output.bluetooth else 'Wired / HDMI' }}</span>
+        </button>
+        {% else %}<p>Outputs will appear on the Raspberry Pi.</p>{% endfor %}
+      </div>
+    </section>
+    <section class="settings-card bluetooth-card">
+      <p class="label">Wireless sound</p><h2>Pair Bluetooth speaker</h2>
+      <p>Put the speaker in pairing mode, then start a scan.</p>
+      <button class="minimal-button primary remote-focus" id="scan-bluetooth" type="button">Find Bluetooth speaker</button>
+      <div class="wifi-list" id="bluetooth-list"></div>
+    </section>
+  </div>
+  <div class="toast" id="settings-toast" role="status"></div>
+</section>
+{% endblock %}
+{% block scripts %}<script defer src="{{ url_for('static', filename='js/settings.js') }}"></script>{% endblock %}

@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+PROJECT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PYTHON="$PROJECT_DIR/.venv/bin/python"
+
+if [ ! -x "$PYTHON" ]; then
+    echo "Python environment not found. Set it up once with:"
+    echo "  python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt"
+    exit 1
+fi
+
+cd "$PROJECT_DIR"
+exec "$PYTHON" run.py

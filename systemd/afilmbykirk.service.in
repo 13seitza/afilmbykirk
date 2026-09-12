@@ -1,0 +1,19 @@
+[Unit]
+Description=A Film by Kirk media app
+After=local-fs.target
+
+[Service]
+Type=simple
+User=__USER__
+Group=__GROUP__
+WorkingDirectory=__APP_DIR__
+EnvironmentFile=/etc/afilmbykirk.env
+Environment=XDG_RUNTIME_DIR=/run/user/__UID__
+ExecStart=__APP_DIR__/.venv/bin/gunicorn --workers 2 --threads 2 --bind 0.0.0.0:5000 --access-logfile - run:app
+Restart=on-failure
+RestartSec=3
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

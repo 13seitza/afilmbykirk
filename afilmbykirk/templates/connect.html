@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Watch elsewhere · A Film by Kirk{% endblock %}
+{% block content %}
+<section class="connect-card">
+  <div>
+    <h1>Watch on another device</h1>
+    <p>Connect your phone, tablet, or laptop to the same Wi-Fi network, then scan this code.</p>
+    <p class="connect-url">{{ connect_url }}</p>
+  </div>
+  <div class="qr-frame"><img src="{{ url_for('main.connect_qr') }}" alt="QR code for {{ connect_url }}"></div>
+</section>
+{% endblock %}

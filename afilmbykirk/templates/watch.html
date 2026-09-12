@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ episode.title }} · A Film by Kirk{% endblock %}
+{% block body_class %}watch-page{% endblock %}
+{% block content %}
+<section class="cinema-player" id="cinema-player">
+  {% if episode.available %}
+  <video id="episode-player" autoplay playsinline preload="auto"
+    data-episode-id="{{ episode.id }}"
+    data-resume-at="{{ progress.get('position_seconds', 0) }}"
+    data-next-url="{{ url_for('main.watch', episode_id=next_episode.id) if next_episode else '' }}">
+    <source src="{{ url_for('main.media', episode_id=episode.id) }}">
+  </video>
+
+  <div class="player-controls visible" id="player-controls">
+    <div class="player-topbar">
+      <div class="player-topbar-left">
+        <a class="player-nav remote-focus" href="{{ url_for('main.season', season_number=episode.season) }}">← Back to season</a>
+        <a class="player-nav remote-focus" href="{{ url_for('main.home') }}">⌂ Home</a>
+      </div>
+      <button class="player-nav thumbnail-button remote-focus" id="thumbnail-button" type="button" hidden>▣ Save thumbnail</button>
+    </div>
+
+    <div class="player-center-controls">
+      <button class="transport-button play-button remote-focus" id="play-button" type="button" aria-label="Play or pause"></button>
+    </div>
+
+    <div class="player-bottombar">
+      <input class="player-scrubber" id="player-scrubber" type="range" min="0" max="100" value="0" step=".1" aria-label="Episode progress">
+      <div class="player-details">
+        <div>
+          <span>Season {{ episode.season }} · Episode {{ episode.number }}</span>
+          <strong>{{ episode.title }}</strong>
+        </div>
+        <div class="player-time"><span id="current-time">0:00</span> / <span id="duration-time">0:00</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="player-toast" role="status"></div>
+  {% else %}
+  <div class="unavailable-player fullscreen">
+    <span>Media not available</span>
+    <p>Add a file named <code>{{ episode.id }}.mp4</code> to play this episode.</p>
+    <div>
+      <a class="minimal-button primary remote-focus" href="{{ url_for('main.season', season_number=episode.season) }}">← Back to season</a>
+      <a class="minimal-button remote-focus" href="{{ url_for('main.home') }}">⌂ Home</a>
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script defer src="{{ url_for('static', filename='js/player.js') }}"></script>{% endblock %}

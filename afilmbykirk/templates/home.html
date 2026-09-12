@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block body_class %}home-page{% endblock %}
+{% block content %}
+<section class="home-screen">
+  {% if hero_video %}
+  <video class="ambient-video" autoplay muted loop playsinline aria-hidden="true">
+    <source src="{{ url_for('main.hero_background') }}" type="video/mp4">
+  </video>
+  {% endif %}
+  <div class="ambient-shade"></div>
+
+  <div class="home-content">
+    {% if episode_count %}
+    {% set episode = continue_watching[0] if continue_watching else first_episode %}
+    {% set state = progress.get(episode.id, {}) %}
+    <section class="featured-actions">
+      <a class="feature-card continue-card remote-focus{% if episode.available or episode.artwork %} has-artwork{% endif %}"
+        href="{{ url_for('main.watch', episode_id=episode.id) }}"
+        {% if episode.available or episode.artwork %}style="--feature-artwork:url('{{ url_for('main.artwork', episode_id=episode.id) }}')"{% endif %}>
+        <p class="label">{% if continue_watching %}Continue where you left off{% else %}Start watching{% endif %}</p>
+        <div class="feature-body">
+          <div>
+            <span>Season {{ episode.season }} · Episode {{ episode.number }}</span>
+            <h1>{{ episode.title }}</h1>
+            <p>
+              {% if continue_watching %}
+              Resume at {{ (state.position_seconds / 60)|int }} min
+              {% if state.duration_seconds %} · {{ ((state.duration_seconds - state.position_seconds) / 60)|round|int }} min left{% endif %}
+              {% else %}Begin with the first episode{% endif %}
+            </p>
+          </div>
+          <b class="play-icon">▶</b>
+        </div>
+        <div class="progress-track"><span style="width: {{ ([state.position_seconds / state.duration_seconds * 100 if state.duration_seconds else 0, 100]|min) }}%"></span></div>
+      </a>
+
+      <a class="feature-card random-card remote-focus" href="{{ url_for('main.random_episode') }}">
+        <p class="label">Not sure what to watch?</p>
+        <div class="feature-body">
+          <div>
+            <span>Leave it to Kirk</span>
+            <h1>Kirk’s Choice</h1>
+            <p>Play a random episode from any season</p>
+          </div>
+          <svg class="feature-shuffle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3c5 0 5 10 10 10h3M17 14l3 3-3 3M4 17h3c5 0 5-10 10-10h3M17 4l3 3-3 3"/></svg>
+        </div>
+      </a>
+    </section>
+    <section class="season-picker">
+      <p class="label">Or choose a season</p>
+      <div class="season-grid">
+        {% for season, episodes in seasons.items() %}
+        {% set season_episode = episodes|selectattr('available')|first %}
+        <a class="season-tile remote-focus{% if season_episode %} has-artwork{% endif %}"
+          href="{{ url_for('main.season', season_number=season) }}"
+          {% if season_episode %}style="--season-artwork:url('{{ url_for('main.artwork', episode_id=season_episode.id) }}')"{% endif %}>
+          <small>Season</small>
+          <strong>{{ season }}</strong>
+          <span>{{ episodes|length }} episodes</span>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="quick-actions">
+      <a class="text-action remote-focus" href="{{ url_for('main.connect') }}"><span>⌁</span> Stream on another device</a>
+      {% if request.remote_addr in ['127.0.0.1', '::1'] %}
+      <a class="text-action remote-focus" href="{{ url_for('main.settings') }}"><span>⚙</span> Settings</a>
+      {% endif %}
+    </section>
+    {% else %}
+    <section class="empty-state">
+      <p class="label">The projector is ready</p>
+      <h1>Add your episodes</h1>
+      <p>Name files like <code>S01E01 - Pilot.mp4</code> and place them in the media folder.</p>
+    </section>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
